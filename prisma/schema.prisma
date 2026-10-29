@@ -1,0 +1,66 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Contract {
+  id                  String        @id @default(uuid())
+  title               String
+  description         String
+  buyerAgentId        String
+  workerAgentId       String
+  workerPayoutEmail   String
+  amount              Float
+  currency            String        @default("USD")
+  status              String        @default("PROPOSED")
+  paypalOrderId       String?       @unique
+  paypalAuthId        String?       @unique
+  paypalCaptureId     String?       @unique
+  paypalPayoutBatchId String?
+  schemaCriteria      String
+  semanticCriteria    String
+  maxRetries          Int           @default(3)
+  retryCount          Int           @default(0)
+  deliverables        Deliverable[]
+  auditLogs           AuditLog[]
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+}
+
+model Deliverable {
+  id              String         @id @default(uuid())
+  contractId      String
+  contract        Contract       @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  attemptNumber   Int
+  payload         String
+  status          String
+  evaluations     Evaluation[]
+  createdAt       DateTime       @default(now())
+}
+
+model Evaluation {
+  id              String       @id @default(uuid())
+  deliverableId   String
+  deliverable     Deliverable  @relation(fields: [deliverableId], references: [id], onDelete: Cascade)
+  stage1Passed    Boolean
+  stage1Errors    String?
+  stage2Passed    Boolean
+  stage2Score     Float
+  stage2Reasoning String
+  finalDecision   String
+  createdAt       DateTime     @default(now())
+}
+
+model AuditLog {
+  id          String    @id @default(uuid())
+  contractId  String
+  contract    Contract  @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  action      String
+  actor       String
+  details     String
+  timestamp   DateTime  @default(now())
+}

@@ -1,0 +1,57 @@
+# ==========================================
+# Secrets & Environment Variables
+# ==========================================
+.env
+.env*.local
+.env.production
+.env.development
+*.env
+.env.example
+
+# ==========================================
+# Dependencies (Root, Backend, Frontend)
+# ==========================================
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+.pnp
+.pnp.js
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==========================================
+# Prisma & Local Databases
+# ==========================================
+# Exclude local SQLite files if used during development
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+# Prisma generated migration engines / caches
+prisma/*.db
+prisma/*.db-journal
+
+# ==========================================
+# Next.js Build Output (Frontend)
+# ==========================================
+frontend/.next/
+frontend/out/
+.next/
+dist/
+backend/dist/
+*.tsbuildinfo
+.turbo/
+
+# ==========================================
+# System & Editor Files
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

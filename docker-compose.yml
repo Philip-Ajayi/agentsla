@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - DATABASE_URL=file:./dev.db
+      - PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID:-mock_client}
+      - PAYPAL_CLIENT_SECRET=${PAYPAL_CLIENT_SECRET:-mock_secret}
+      - PAYPAL_API_BASE=https://api-m.sandbox.paypal.com
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-mock_gemini}
+      - FRONTEND_URL=http://localhost:3000
+    volumes:
+      - agentsla_db_data:/app/prisma
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=http://localhost:4000
+    depends_on:
+      - backend
+
+volumes:
+  agentsla_db_data:
